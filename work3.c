@@ -41,11 +41,18 @@ void *TA()
             receive(&y, 2);
 
         } while (y >= 1 && y <= 10);
+
+	while(1){
+        printf("TA executando fa, fb e fc, TB e TC em estado de erro\n");
+        x = fa();
+        y = fb();
+        z = fc();
+    	}
+
     } else {
         sendAsync(&status, 0);
-    }
-    
-    do {
+
+	do {
             x = fa();
             z = fc();
             printf("TA executando fa e fc, TC em estado de erro\n");
@@ -53,14 +60,15 @@ void *TA()
             receive(&y, 5);
 
         } while (y >= 50 && y <= 100);
-    
-    while(1){
+	
+	while(1){
         printf("TA executando fa, fb e fc, TB e TC em estado de erro\n");
         x = fa();
         y = fb();
         z = fc();
-    }
-    
+    	}
+
+    }    
 }
 
 void *TB(){
@@ -85,11 +93,17 @@ void *TB(){
             receive(&y, 0);
 
         } while (y >= 5 && y <= 10);
+	
+	while(1){
+        printf("TB executando fa, fb e fc, TA e TC em estado de erro\n");
+        x = fa();
+        y = fb();
+        z = fc();
+    	}
+
     } else {
         sendAsync(&status, 1);
-    }
-    
-    do {
+	do {
             x = fb();
             z = fa();
             printf("TB executando fb e fa, TA em estado de erro\n");
@@ -98,11 +112,12 @@ void *TB(){
 
         } while (y >= 1 && y <= 10);
     
-    while(1){
-        printf("TB executando fa, fb e fc, TA e TC em estado de erro\n");
-        x = fa();
-        y = fb();
-        z = fc();
+    	while(1){
+            printf("TB executando fa, fb e fc, TA e TC em estado de erro\n");
+            x = fa();
+            y = fb();
+       	    z = fc();
+    	}
     }
 }
 
@@ -128,11 +143,17 @@ void *TC(){
             receive(&y, 1);
 
         } while (y >= 50 && y <= 100);
+	
+	while(1){
+        printf("TC executando fa, fb e fc, TA e TB em estado de erro\n");
+        x = fa();
+        y = fb();
+        z = fc();
+        }
+
     } else {
         sendAsync(&status, 2);
-    }
-    
-    do {
+	do {
             x = fc();
             z = fb();
             printf("TC executando fc e fb, TB em estado de erro\n");
@@ -141,11 +162,12 @@ void *TC(){
 
         } while (y >= 5 && y <= 10);
     
-    while(1){
-        printf("TC executando fa, fb e fc, TA e TB em estado de erro\n");
-        x = fa();
-        y = fb();
-        z = fc();
+        while(1){
+            printf("TC executando fa, fb e fc, TA e TB em estado de erro\n");
+            x = fa();
+            y = fb();
+            z = fc();
+        }
     }
 }
 
