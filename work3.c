@@ -13,11 +13,11 @@ int fa(){
 }
 
 int fb(){
-    return 50;
+    return 550;
 }
 
 int fc(){
-    return 10;
+    return 610;
 }
 
 void *TA()
@@ -51,15 +51,16 @@ void *TA()
 
     } else {
         sendAsync(&status, 0);
-
-	do {
+        receive(&y, 5);
+        // Testa intervalo de TC
+	    while ((y >= 50) && (y <= 100)){
             x = fa();
             z = fc();
             printf("TA executando fa e fc, TC em estado de erro\n");
             sendAsync(&x, 0);
-            receive(&y, 5);
-
-        } while (y >= 50 && y <= 100);
+            receive(&y, 5);            
+            
+        }
 	
 	while(1){
         printf("TA executando fa, fb e fc, TB e TC em estado de erro\n");
@@ -75,15 +76,15 @@ void *TB(){
 
     int x, y, z;
     int status = -5;
-
-    do {
-        receive(&y, 0);
-        x = fb();
-        printf("TB executando fb\n");
-        sendAsync(&x, 1);
-        
-
-    } while (y >= 5 && y <= 10);
+    
+    // Testa intervalo de TA
+    receive(&y, 0);
+	while (y >= 5 && y <= 10) {
+	    x = fb();
+	    printf("TB executando fb\n");
+	    sendAsync(&x, 1);
+	    receive(&y, 0);                    
+	} 
 
     if (y == -5) {
         do {
@@ -103,14 +104,16 @@ void *TB(){
 
     } else {
         sendAsync(&status, 1);
-	do {
+        receive(&y, 4);
+        // Testa intervalo de TC
+	    while ((y >= 1) && (y <= 10)){
             x = fb();
             z = fa();
             printf("TB executando fb e fa, TA em estado de erro\n");
             sendAsync(&x, 1);
-            receive(&y, 4);
-
-        } while (y >= 1 && y <= 10);
+            receive(&y, 4);            
+            
+        }
     
     	while(1){
             printf("TB executando fa, fb e fc, TA e TC em estado de erro\n");
@@ -125,15 +128,15 @@ void *TC(){
 
     int x, y, z;
     int status = -5;
-
-    do {
-        receive(&y, 1);
-        x = fc();
-        printf("TC executando fc\n");
-        sendAsync(&x, 2);
-        
-
-    } while (y >= 50 && y <= 100);
+    
+    // Testa intervalo de TA
+    receive(&y, 1);
+	while (y >= 50 && y <= 100) {
+	    x = fc();
+	    printf("TC executando fc\n");
+	    sendAsync(&x, 2);
+	    receive(&y, 1);                    
+	} 
 
     if (y == -5) {
         do {
@@ -151,16 +154,18 @@ void *TC(){
         z = fc();
         }
 
-    } else {
+    } else {        
         sendAsync(&status, 2);
-	do {
+        receive(&y, 3);
+        // Testa intervalo de TB
+	    while ((y >= 5) && (y <= 10)){
             x = fc();
             z = fb();
             printf("TC executando fc e fb, TB em estado de erro\n");
             sendAsync(&x, 2);
-            receive(&y, 3);
-
-        } while (y >= 5 && y <= 10);
+            receive(&y, 3);            
+            
+        }
     
         while(1){
             printf("TC executando fa, fb e fc, TA e TB em estado de erro\n");
@@ -218,4 +223,3 @@ int main(){
 	pthread_exit(NULL);
 	return 0;
 }
-
